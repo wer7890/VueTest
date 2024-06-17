@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <my-component :test="className"></my-component>
+        <my-component2 :test="className"></my-component2>
+    </div>
+
+
+    <script>
+
+        //如果沒有在子組建中加上props，會變成這樣<div test="book">Hello!</div>
+        Vue.component('my-component', {  
+            template: `<div>Hello!</div>`,
+        })
+
+        //有加上props，<div>Hello! - book</div>
+        Vue.component('my-component2', {
+            template: `<div>Hello! - {{test}}</div>`,
+            props: {
+                test: {
+                    type: String
+                }
+            }
+        })
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    className: 'book'
+                }
+            },
+        })     
+    </script>
+
+</body>
+
+</html>

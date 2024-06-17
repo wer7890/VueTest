@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>prop基本使用</title>
+</head>
+
+<body>
+    <div id="app">
+
+         <!-- 判斷型別 -->
+        <prop-a 
+            :post-string="string1" 
+            :post-array="array1" 
+            :post-object="object1"
+            :post-date="date1" 
+            :post-function="function1" 
+            :post-symbol="symbol1">
+        </prop-a> 
+       
+        <hr>
+
+        <!-- 判斷型別和添加預設值 -->
+        <prop-b></prop-b> 
+
+        <prop-d></prop-d> 
+
+        <hr>
+
+        <!-- 驗證器 -->
+        <prop-c 
+            :post-string="string1" 
+            :post-array="array1" 
+            :post-object="object1" 
+            :post-date="date1" 
+            :post-function="function1" 
+            :post-symbol="symbol1"
+        ></prop-c> 
+
+    </div>
+
+
+    <script>
+
+        //string 判斷型別
+        Vue.component('prop-a', {
+            template: `
+                <div>
+                    <p>String - {{ postString }}</p>
+                    <p>Array - {{ postArray }}</p>
+                    <p>Object - {{ postObject }}</p>
+                    <p>Date - {{ postDate }}</p>
+                    <p>Function - {{ postFunction() }}</p>
+                    <p>Symbol - {{ postSymbol.toString() }}</p>
+                </div>
+            `,
+            props: {
+                postString: String,
+                postArray: Array,
+                postObject: Object,
+                postDate: Date,
+                postFunction: Function,
+                postSymbol: Symbol,
+            },
+        });
+
+        //判斷型別和添加預設值
+        Vue.component('prop-b', {
+            template: `
+                <div>
+                    <p>String - {{ postString }}</p>
+                    <p>Array - {{ postArray }}</p>
+                    <p>Object - {{ postObject }}</p>
+                    <p>Date - {{ postDate }}</p>
+                    <p>Function - {{ postFunction() }}</p>
+                    <p>Symbol - {{ postSymbol.toString() }}</p>
+                </div>
+            `,
+            props: {
+                postString: {
+                    type: String,
+                    default: '456'  // 預設值
+                },
+                postArray: {
+                    type: Array,
+                    default: () => [1, 2, 3]  
+                },
+                postObject: {
+                    type: Object,
+                    default: () => ({ name: 'ray' })
+                },
+                postDate: {
+                    type: Date,
+                    default: () => new Date()
+                },
+                postFunction: {
+                    type: Function,
+                    default: () => () => 'default function'
+                },
+                postSymbol: {
+                    type: Symbol,
+                    default: () => Symbol('default')
+                }
+            },
+        });
+
+        Vue.component('prop-d', {
+            template: `
+                <div>
+                    <p>String - {{ postString }}</p>
+                    <p>Array - {{ postArray }}</p>
+                </div>
+            `,
+            props: {
+                postString: {
+                    type: String,
+                    default: '456'  // 預設值
+                },
+                postArray: {
+                    type: Array,
+                    default: () => [1, 2, 3]  // 使用箭頭函數返回新的數組
+                },
+            },
+        });
+
+        
+        //驗證器
+        Vue.component('prop-c', {
+            template: `
+                <div>
+                    <p>String - {{ postString }}</p>
+                    <p>Array - {{ postArray }}</p>
+                    <p>Object - {{ postObject }}</p>
+                    <p>Date - {{ postDate }}</p>
+                    <p>Function - {{ postFunction() }}</p>
+                    <p>Symbol - {{ postSymbol.toString() }}</p>
+                </div>
+            `,
+            props: {
+                postString: {
+                    type: String,
+                    required: true,  // 必填
+                    validator: function (val) {  // 驗證器
+                        return ['aaa', 'bbb', 'ccc'].includes(val)  // 这个值必须匹配下列字符串中的一个
+                    }
+                },
+                postArray: {
+                    type: Array,
+                    required: true,
+                    validator: function (val) {
+                        return val.length > 0;  // 確保数组不为空
+                    }
+                },
+                postObject: {
+                    type: Object,
+                    required: true,
+                    validator: function (val) {
+                        return 'key' in val;  // 確保对象包含 'key' 属性
+                    }
+                },
+                postDate: {
+                    type: Date,
+                    required: true,
+                    validator: function (val) {
+                        return !isNaN(val.getTime());  // 確保是有效日期
+                    }
+                },
+                postFunction: {
+                    type: Function,
+                    required: true,
+                    validator: function (val) {
+                        return typeof val() === 'string';  // 確保函数返回一个字符串
+                    }
+                },
+                postSymbol: {
+                    type: Symbol,
+                    required: true,
+                    validator: function (val) {
+                        return typeof val === 'symbol';  // 確保是Symbol类型
+                    }
+                }
+            },
+        });
+
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    string1: 'aaa',
+                    array1: [1, 2, 3],
+                    object1: { key: 'value' },
+                    date1: new Date(),
+                    function1: () => 'hello world',
+                    symbol1: Symbol('mySymbol'),
+                    test: 'bbb'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

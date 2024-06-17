@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>ref取得DOM元素</title>
+</head>
+<body>
+    <div id="app">
+        <div ref="myElement">这是一个DOM元素</div>
+        <p id="myParagraph">这是一个段落</p>
+        <button @click="getElement">获取元素</button>
+    </div>
+    
+    <script>
+    var vm = new Vue({
+        el: '#app',
+        methods: {
+            getElement() {
+                // 通过 $refs 访问 DOM 元素
+                var element = this.$refs.myElement;
+                console.log(element); // 输出 DOM 元素对象
+                
+                var paragraph = document.getElementById('myParagraph');
+                console.log(paragraph); // 输出DOM元素对象
+            }
+        }
+    });
+    </script>
+</body>
+</html>

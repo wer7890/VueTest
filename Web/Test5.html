@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>組件</title>
+</head>
+
+<body>
+    <div id="app">
+        <my-component></my-component>
+        <my-component-b></my-component-b>
+        <my-component-c></my-component-c>
+    </div>
+
+    <script>
+        var ComponentA = Vue.component('my-component', {
+            template: "<div>1234</div>",
+        });
+
+        var ComponentB = Vue.component('my-component-b', {
+            template: "<div>123456</div>",
+            components: {
+                'component-a': ComponentA
+            },
+        });
+
+        var ComponentC = {
+            template: "<div>789</div>",
+        }
+
+
+
+        
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                msg: '123',
+                className: 'block'
+            },
+            methods: {
+                greeting: function () {
+                    alert('Hello Vue!');
+                }
+            },
+            components: {
+                'my-component-c': ComponentC
+            }
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>v-bind & computed & watch</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>Using mustaches: {{ rawHtml }}</p>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+        <h1 v-bind:id="'list-' + id">111</h1>
+
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                rawHtml: "<span style='color:red'> AAA </span>",
+                id: "h1",
+                b: ''
+            },
+            computed: {
+                a: function () {
+                    return this.rawHtml + 11;
+                },
+                ab: function () {
+                    return this.b + 10;
+                }
+            },
+            watch: {
+                rawHtml: function () {
+                    this.b = '1234';
+                },
+                ab: function () {
+                    this.rawHtml = this.b + '456';
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

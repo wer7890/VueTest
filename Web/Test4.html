@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>v-for和foreach</title>
+</head>
+
+<body>
+    <div id="app">
+        <ul id="item-list"></ul>
+        <button id="add-item">forEach新增</button>
+
+
+        <li v-for="(item, index) in items" :key="index">{{ item }}</li>
+        <button v-on:click="pushArr">v-for新增</button>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                items: ['Apple', 'Banana', 'Cherry']
+            },
+            methods: {
+                pushArr: function () {
+                    this.items.push("test")
+                },
+
+            }
+        })
+
+        const items = ['Apple', 'Banana', 'Cherry'];
+
+        function renderItems() {
+            const itemList = document.getElementById('item-list');
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                itemList.appendChild(li);
+            });
+        }
+
+        document.getElementById('add-item').addEventListener('click', () => {
+            items.push('Dragonfruit');
+        });
+
+        renderItems();
+    </script>
+</body>
+
+</html>

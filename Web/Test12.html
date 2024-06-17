@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>props_Date</title>
+</head>
+<body>
+    <div id="app">
+        <prop-a></prop-a>
+        <prop-a></prop-a>
+    </div>
+
+
+    <script>
+        Vue.component('prop-a', {
+            template: `
+                <div>
+                    <p>Date - {{ postDate }}</p>
+                    <button @click='updateDate'>更新</button>
+                </div>
+            `,
+            props: {
+                postDate: {
+                    type: Date,
+                    default: function(){
+                        return new Date()
+                    }
+                },
+            },
+            data: function() {
+                return {
+                    localPostDate: this.postDate
+                };
+            },
+            methods: {
+                updateDate: function() {
+                    this.localPostDate = new Date();
+                }
+            }
+        });
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                }
+            },
+        })
+    </script>
+</body>
+</html>

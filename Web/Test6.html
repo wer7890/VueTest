@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>v-for的key</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <li v-for="item in list3" :key="item.id" v-if="item.a">{{ item.name }}</li>
+
+        <hr>
+
+
+
+        <input type="text" v-model="name">
+        <button v-on:click="addItem">新增</button>
+        <ul>
+            <li v-for="item in list2">
+                <input type="checkbox" />
+                {{ item.id }}, {{ item.name }}
+            </li>
+
+        </ul>
+
+        <hr>
+
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                a: false,
+                list: [78, 90, 20, 45, 66, 120, 136],
+                list3: [
+                    { id: 1, name: "香蕉", a: true },
+                    { id: 2, name: "蘋果", a: false },
+                    { id: 3, name: "奇異果", a: true }
+                ],
+                name: "",
+                newId: 3,
+                list2: [
+                    { id: 1, name: "香蕉" },
+                    { id: 2, name: "蘋果" },
+                    { id: 3, name: "奇異果" },
+                ]
+            },
+            methods: {
+                addItem: function () {
+                    this.list2.unshift({ id: ++this.newId, name: this.name })
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
