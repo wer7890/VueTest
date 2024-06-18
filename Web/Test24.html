@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>v-model組件雙向綁定</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>父組件 - {{visible}}</p>
+        <my-component v-model="visible"></my-component>
+    </div>
+
+    <script>
+        Vue.component('my-component', {
+            template: `<div v-show="value">
+                我是子组件文字
+                <button @click="$emit('input', false)">關閉</button>
+            </div>`,
+            props: {
+                value: {
+                    type: Boolean,
+                    required: true,
+                },
+            },
+            // model: {  //改變value和input的默認值
+            //     prop: "show",
+            //     event: "change",
+            // },
+        })
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    visible: true
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

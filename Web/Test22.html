@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>動態切換組件(原始使用v-if)</title>
+</head>
+
+<body>
+    <div id="app">
+        <button 
+            v-for="tab in tabs" 
+            :key="tab" 
+            @click="currentTab = tab">
+            {{ tab }}
+        </button>
+
+        <tab-home v-if="currentTab === 'Home'"></tab-home>
+        <tab-posts v-if="currentTab === 'Posts'"></tab-posts>
+        <tab-archive v-if="currentTab === 'Archive'"></tab-archive>
+    </div>
+
+    <script>
+        Vue.component('tab-home', {
+            template: `<div class="demo-tab">Home component</div>`
+        });
+
+        Vue.component('tab-posts', {
+            template: `<div class="demo-tab">Post component</div>`
+        });
+
+        Vue.component('tab-archive', {
+            template: `<div class="demo-tab">Archive component</div>`
+        });
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    currentTab: 'Home',
+                    tabs: ['Home', 'Posts', 'Archive']
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

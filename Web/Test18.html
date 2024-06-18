@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>子傳父2($emit)</title>
+</head>
+<body>
+    <div id="app">
+        <p>父組件的數值 - {{ num }}</p>
+        <son :num='num' @num-add = "getNum"></son>  <!-- 监听子组件触发的自定义事件 -->
+    </div>
+
+    <script>
+        let son = {
+            template: `
+                <div>
+                    <p>子組件的數值 - {{ num }}</p>
+                    <button @click="Add">加一</button>
+                </div>
+            `,
+            props: {
+                num: {
+                    type: Number,
+                    required: true,
+                }
+            },
+            data() {
+                return {
+                    newVal: this.num
+                }
+            },
+            methods: {
+                Add: function(){
+                    this.$emit('num-add', this.newVal += 1)
+                }
+            },
+        }
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    num: 0
+                }
+            },
+            methods: {
+                getNum: function(val){
+                    this.num = val
+                }
+            },
+            components: {
+                son: son
+            },
+        })
+    </script>
+</body>
+</html>

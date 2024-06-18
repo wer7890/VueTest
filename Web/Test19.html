@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>slot(默認插槽)</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>沒使用slot，在子組件的標籤中使用msg會被自己所定義的template模板內容所取代(大多數情況下，這裡放任何內容都是無意義的)</p>
+        <p>{{ msg }}</p>
+        <my-component>{{ msg }}</my-component>
+
+        <hr>
+        
+        <p>有使用slot，在子組件的標籤中使用msg會得到父組件的值</p>
+        <p>{{ msg }}</p>
+        <custom-component>{{ msg }}</custom-component>  <!-- 如果外部元件沒有提供任何內容給子元件時，原本在子元件的 slot 區塊的位置則會出現預先設定好的文字(預設內容)。  -->
+
+    </div>
+
+
+    <script>
+        Vue.component('my-component', {
+            template: `<div>Hello!</div>`,
+            data() {
+                return {
+                    msg: '子組件'
+                }
+            }
+        });
+
+        Vue.component('custom-component', {
+            template: `<div>
+                Hello!
+                <div>
+                    <slot>預設內容</slot>  
+                </div>
+            </div>`,
+            data() {
+                return {
+                    msg: '子組件'
+                }
+            }
+        });
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    msg: '父組件'
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

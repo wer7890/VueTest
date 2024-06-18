@@ -1,27 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/vue.js"></script>
-    <title>Document</title>
+    <title>父傳子(props)</title>
 </head>
+
 <body>
     <div id="app">
-        <p>{{a}}</p>
+        <p>父組件的name - {{name}}</p>
+        <p>父組件的age - {{age}}</p>
+        <button @click="Add">add父組件</button>
+        <my-component :name="name" :age="age"></my-component>
+        <!-- <test></test>  -->
     </div>
 
+    <hr>
+
+    <div id="app2">
+        <!-- <my-component :name="name" :age="age"></my-component> -->
+        <!-- <test></test> -->
+    </div>
 
     <script>
+        let component = {
+            props: ['name', 'age'],
+            data() {
+                return {
+                    newName: this.name,
+                    newAge: this.age
+                }
+            },
+            template: `
+                <div>
+                    <p>子組件name - {{newName}}</p>
+                    <p>父組件age - {{age}}</p>
+                    <p>子組件age - {{newAge}}</p>
+                    <button @click="AddAge">add子組件</button>
+                </div>
+            `,
+            methods: {
+                AddAge: function(){
+                    this.newAge++;
+                }
+            },
+        };
+
+        Vue.component('test', {
+            template: `<div>測試</div>`
+        });
+
         let vm = new Vue({
             el: "#app",
             data() {
                 return {
-                    a: 1
+                    name: "ray",
+                    age: 12
                 }
             },
-        })
+            methods: {
+                Add: function(){
+                    this.age++;
+                }
+            },
+            components: {
+                'my-component': component
+            }
+        });
+
+        
+
+        let vm2 = new Vue({
+            el: "#app2"
+        });
     </script>
 </body>
+
 </html>

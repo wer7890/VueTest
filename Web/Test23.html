@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>動態切換組件(is)</title>
+</head>
+<body>
+    <div id="app">
+        <button 
+            v-for="tab in tabs" 
+            :key="tab" 
+            @click="currentTab = tab">
+            {{ tab }}
+        </button>
+
+        
+        <keep-alive>  <!-- 如果不想在切換後把原本的組件銷毀，使用<keep-alive></keep-alive>可把他們緩存下來 -->
+            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+        </keep-alive>
+
+        <hr>
+
+        <keep-alive include="tab-home,tab-posts">  <!-- 只保留 tab-home 與 tab-posts 的狀態(組件需設置name屬性) -->
+            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+        </keep-alive>
+
+        <hr>
+
+        <keep-alive exclude ="tab-home,tab-posts">  <!-- 排除 tab-home 與 tab-posts 的保留狀態(組件需設置name屬性) -->
+            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+        </keep-alive>
+
+        <hr>
+
+        <keep-alive :max="2">  <!-- 只會保留最後引入的兩個子組件狀態 -->
+            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+        </keep-alive>
+
+
+    </div>
+
+    <script>
+        Vue.component('tab-home', {
+            name: 'tab-home',
+            template: `<div class="demo-tab">Home component</div>`
+        });
+
+        Vue.component('tab-posts', {
+            name: 'tab-posts',
+            template: `<div class="demo-tab">Post component</div>`
+        });
+
+        Vue.component('tab-archive', {
+            name: 'tab-archive',
+            template: `<div class="demo-tab">Archive component</div>`
+        });
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    currentTab: 'tab-home',
+                    tabs: ['tab-home', 'tab-posts', 'tab-archive']
+                }
+            }
+        })
+    </script>
+</body>
+</html>

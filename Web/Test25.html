@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{str}}</p>
+        <hr>
+        <hello-world></hello-world>
+        <alert></alert>
+    </div>
+
+
+    <script>
+        Vue.prototype.$bus = new Vue();
+
+        
+        Vue.component('alert', {
+            template: `<div></div>`,
+            created() {
+                // 在 created(創建) 的時候在 Vue 底下註冊監聽 alertMessage 這個事件
+                this.$bus.$on("alertMessage", msg => {
+                    // 並將接收到的 message 傳給自己的 methods showAlert 去觸發 alert 事件。
+                    this.showAlert(msg);
+                });
+
+                this.$bus.$on("stopAlertBus", () => {
+                    this.stopAlertBus();
+                });
+            },
+            methods: {
+                showAlert(msg) {
+                    alert(msg);
+                },
+                stopAlertBus(){
+                    this.$bus.$off("alertMessage")
+                }
+            },
+            beforeDestroy: function () {
+                // 元件銷毀前要註銷監聽事件    
+                this.$bus.$off("alertMessage");
+                this.$bus.$off("stopAlertBus");
+            }
+        })
+
+        Vue.component('hello-world', {
+            template: `<div>
+                <button @click="doShowAlert(message)">開始監聽</button>  
+                <button @click="stopAlertBus()">停止監聽</button>
+                <button @click="updata(message2)">變動</button>
+            </div>`,
+            data() {
+                return {
+                    message: "我是寫在helloworld.vue的,訊息",
+                    message2: "變動",
+                };
+            },
+            methods: {
+                // 把事件 emit 出去
+                doShowAlert(msg) {
+                    this.$bus.$emit("alertMessage", msg);
+                },
+                stopAlertBus(){
+                    this.$bus.$emit("stopAlertBus")
+                },
+                updata() {
+                    this.$bus.$emit("updataMessage", msg)
+                }
+            }
+        })
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    str: 1
+                }
+            },
+            methods: {
+                updata: function(msg){
+                    this.str = msg;
+                }
+            },
+            created() {
+                // 在 created(創建) 的時候在 Vue 底下註冊監聽 alertMessage 這個事件
+                this.$bus.$on("updataMessage", msg => {
+                    this.updata(msg);
+                });
+            },
+        })
+
+        console.log(vm);
+
+    </script>
+</body>
+
+</html>
