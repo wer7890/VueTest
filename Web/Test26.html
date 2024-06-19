@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>EventBus(事件總線)</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 我創建兩個組件(component-a，component-b)，vm會傳入一個數值給兩個組件，當組件b按下按鈕時
+             會把該值+1，使用事件總線的方式，讓組件b把該值+1時，組件a也能夠+1，並且把組件a的title值變成組件b的title值 -->
+
+        <component-a :num="num"></component-a>
+
+        <hr>
+
+        <component-b :num="num"></component-b>
+
+        <hr>
+        
+
+        <component-c :num="num" v-if="test"></component-c>
+    </div>
+
+
+    <script>
+        Vue.component('component-a', {
+            template: `<div>
+                    <p>{{title}}</p>
+                    {{newNum}}
+                </div>`,
+            props: {
+                num: {
+                    type: Number,
+                    required: true
+                }
+            },
+            data() {
+                return {
+                    newNum: this.num,
+                    title: '我是組件A'
+                }
+            },
+            methods: {
+                add(val){
+                    this.newNum++;
+                    this.title = val
+                }
+            },
+            created() {  //組件創建後，監聽自定義事件
+                this.$bus.$on('add-num', this.add)
+            },
+            beforeDestroy() {  //組件銷毀前，移除該監聽
+                this.$bus.$off('add-num');
+            }
+        });
+
+        Vue.component('component-b', {
+            template: `<div>
+                    <p>{{title}}</p>
+                    <p>{{newNum}}</p>
+                    <button @click="add">add</button>
+                </div>`,
+            props: {
+                num: {
+                    type: Number,
+                    required: true
+                }
+            },
+            data() {
+                return {
+                    newNum: this.num,
+                    title: '我是組件B'
+                }
+            },
+            methods: {
+                add() {
+                    this.newNum++;
+                    this.$bus.$emit('add-num', this.title);
+                }
+            },
+            
+        });
+
+
+        Vue.component('component-c', {
+            template: `<div>
+                    <p>{{title}}</p>
+                    {{newNum}}
+                </div>`,
+            props: {
+                num: {
+                    type: Number,
+                    required: true
+                }
+            },
+            data() {
+                return {
+                    newNum: this.num,
+                    title: '我是組件C'
+                }
+            },
+            methods: {
+                add(val){
+                    this.newNum++;
+                    this.title = val
+                },
+            },
+            created() {  //組件創建後，監聽自定義事件
+                this.$bus.$on('add-num', this.add)
+            },
+            beforeDestroy() {  //組件銷毀前，移除該監聽
+                this.$bus.$off('add-num', this.add);
+            }
+        });
+
+
+        //Vue.prototype.$bus = new Vue();
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    num: 1,
+                    test: true
+                }
+            },
+            beforeCreate() {
+                Vue.prototype.$bus = this;
+            }  
+        });
+    </script>
+</body>
+</html>

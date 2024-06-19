@@ -6,13 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/vue.js"></script>
-    <title>v-model組件雙向綁定</title>
+    <title>v-model父子組件資料雙向綁定</title>
 </head>
 
 <body>
     <div id="app">
         <p>父組件 - {{visible}}</p>
         <my-component v-model="visible"></my-component>
+
+        {{str}}
+        <input type="text" v-model="str">
+
+        
+        {{str2}}
+        <input type="text" :value="str2" @input="Change">
     </div>
 
     <script>
@@ -38,7 +45,18 @@
             el: "#app",
             data() {
                 return {
-                    visible: true
+                    visible: true,
+                    str: "123",  str2: "123"
+                }
+            },
+            methods: {
+                Change:function(e){
+                    if(!/^-?\d+$/.test(e.currentTarget.value)){
+                        e.currentTarget.value = this.str2;
+                        return;
+                    }
+
+                    this.str2 = e.currentTarget.value;
                 }
             },
         })
@@ -46,3 +64,65 @@
 </body>
 
 </html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>v-model組件雙向綁定</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>父組件 - {{obj.str}} - {{obj.value}}</p>
+        <my-component v-model="obj"></my-component>
+    </div>
+
+    <script>
+        Vue.component('my-component', {
+            template: `<div v-show="obj.value">
+                我是子组件文字
+                <button @click="updata">關閉</button>
+            </div>`,
+            props: {
+                value: {
+                    type: Object,
+                    required: true,
+                },
+            },
+            data() {
+                return {
+                    obj: {value: this.value.value, str: '變動後'}
+                }
+            },
+            methods: {
+                updata() {
+                    this.obj.value = false;
+                    this.$emit('input', this.obj);
+                }
+            },
+            // model: {  //改變value和input的默認值
+            //     prop: "show",
+            //     event: "change",
+            // },
+        })
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    obj: {value: true, str: '變動前'}
+                }
+            },
+        })
+    </script>
+</body>
+
+</html> -->

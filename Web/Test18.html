@@ -11,6 +11,7 @@
     <div id="app">
         <p>父組件的數值 - {{ num }}</p>
         <son :num='num' @num-add = "getNum"></son>  <!-- 监听子组件触发的自定义事件 -->
+        <!-- <son :num='num' ref="son"></son>    使用ref-->
     </div>
 
     <script>
@@ -19,6 +20,7 @@
                 <div>
                     <p>子組件的數值 - {{ num }}</p>
                     <button @click="Add">加一</button>
+                    <button @click="del">解除綁定</button>
                 </div>
             `,
             props: {
@@ -34,7 +36,13 @@
             },
             methods: {
                 Add: function(){
-                    this.$emit('num-add', this.newVal += 1)
+                    this.$emit('num-add', this.newVal += 1);
+                    this.$emit('deom');
+                },
+                del() {
+                    //this.$off('num-add');  //解綁一個自定義事件
+                    //this.$off(['num-add', 'deom']);  //解綁多個自定義事件
+                    this.$off();  //解綁所有自定義事件
                 }
             },
         }
@@ -50,11 +58,17 @@
             methods: {
                 getNum: function(val){
                     this.num = val
+                },
+                m1() {
+                    console.log("deom觸發了");
                 }
             },
             components: {
                 son: son
             },
+            // mounted() {
+            //     this.$refs.son.$on('num-add', this.getNum)  //綁定自定義事件(也可使用$once)
+            // },
         })
     </script>
 </body>

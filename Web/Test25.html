@@ -59,7 +59,7 @@
             data() {
                 return {
                     message: "我是寫在helloworld.vue的,訊息",
-                    message2: "變動",
+                    message2: "變動後",
                 };
             },
             methods: {
@@ -70,7 +70,7 @@
                 stopAlertBus(){
                     this.$bus.$emit("stopAlertBus")
                 },
-                updata() {
+                updata(msg) {
                     this.$bus.$emit("updataMessage", msg)
                 }
             }
@@ -81,7 +81,7 @@
             el: "#app",
             data() {
                 return {
-                    str: 1
+                    str: '變動前'
                 }
             },
             methods: {
@@ -90,7 +90,6 @@
                 }
             },
             created() {
-                // 在 created(創建) 的時候在 Vue 底下註冊監聽 alertMessage 這個事件
                 this.$bus.$on("updataMessage", msg => {
                     this.updata(msg);
                 });

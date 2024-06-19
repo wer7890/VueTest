@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <component-a></component-a>
+        <component-b></component-b>
+        <component-c v-if="test"></component-c>
+    </div>
+
+    
+
+    <script>
+        Vue.component('component-a', {
+            template: `<div>我是組件a</div>`,
+            methods: {
+                showLog(){
+                    console.log("我是組件a");
+                }
+            },
+            created(){
+                this.$bus.$on("console-log", this.showLog)
+            }
+        })
+
+        Vue.component('component-c', {
+            template: `<div>我是組件c</div>`,
+            methods: {
+                showLog2(){
+                    console.log("我是組件c");
+                }
+            },
+            created(){
+                this.$bus.$on("console-log", this.showLog2)
+            },
+            beforeDestroy() {  //組件銷毀前，移除該監聽
+                this.$bus.$off('console-log', this.showLog2); //取消掛載在console-log事件中的showLog2方法的監聽，所以組件c就不會有監聽了
+                //this.$bus.$off('console-log', this.showLog);  //取消掛載在console-log事件中的showLog方法的監聽，所以組件a就不會有監聽了
+            } 
+        })
+
+        Vue.component('component-b', {
+            template: `<div>
+                    <p>我是組件b</p>
+                    <button @click="show">按鈕</button>
+                </div>`,
+            methods: {
+                show(){
+                    console.log("我是組件b");
+                    this.$bus.$emit("console-log")
+                }
+            },
+        })
+
+
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    test: true
+                }
+            },
+            beforeCreate() {
+                Vue.prototype.$bus = this;
+            } 
+        })
+    </script>
+</body>
+
+</html>

@@ -16,54 +16,58 @@
             {{ tab }}
         </button>
 
-        
+
         <keep-alive>  <!-- 如果不想在切換後把原本的組件銷毀，使用<keep-alive></keep-alive>可把他們緩存下來 -->
-            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+            <component :is='currentTab'></component>  <!-- 這邊的is是判斷組件的名稱，不是name屬性的值，當切換時原本的組件會被銷毀 -->
         </keep-alive>
+
 
         <hr>
+        
+        <div v-if='show'>
+            <keep-alive include="one,two">  <!-- 只保留 one 與 two 的狀態(組件需設置name屬性) -->
+                <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+            </keep-alive>
 
-        <keep-alive include="tab-home,tab-posts">  <!-- 只保留 tab-home 與 tab-posts 的狀態(組件需設置name屬性) -->
-            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
-        </keep-alive>
+            <hr>
 
-        <hr>
+            <keep-alive exclude ="one,two">  <!-- 排除 one 與 two 的保留狀態(組件需設置name屬性) -->
+                <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+            </keep-alive>
 
-        <keep-alive exclude ="tab-home,tab-posts">  <!-- 排除 tab-home 與 tab-posts 的保留狀態(組件需設置name屬性) -->
-            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
-        </keep-alive>
+            <hr>
 
-        <hr>
-
-        <keep-alive :max="2">  <!-- 只會保留最後引入的兩個子組件狀態 -->
-            <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
-        </keep-alive>
+            <keep-alive :max="2">  <!-- 只會保留最後引入的兩個子組件狀態 -->
+                <component :is='currentTab'></component>  <!-- 當切換時原本的組件會被銷毀 -->
+            </keep-alive>
+        </div>
 
 
     </div>
 
     <script>
-        Vue.component('tab-home', {
-            name: 'tab-home',
-            template: `<div class="demo-tab">Home component</div>`
+        Vue.component('one', {
+            name: 'one',
+            template: `<div class="demo-tab">組件一</div>`
         });
 
-        Vue.component('tab-posts', {
-            name: 'tab-posts',
-            template: `<div class="demo-tab">Post component</div>`
+        Vue.component('two', {
+            name: 'two',
+            template: `<div class="demo-tab">組件二</div>`
         });
 
-        Vue.component('tab-archive', {
-            name: 'tab-archive',
-            template: `<div class="demo-tab">Archive component</div>`
+        Vue.component('three', {
+            name: 'three',
+            template: `<div class="demo-tab">組件三</div>`
         });
 
         let vm = new Vue({
             el: "#app",
             data() {
                 return {
-                    currentTab: 'tab-home',
-                    tabs: ['tab-home', 'tab-posts', 'tab-archive']
+                    currentTab: 'one',
+                    tabs: ['one', 'two', 'three'],
+                    show: false
                 }
             }
         })
