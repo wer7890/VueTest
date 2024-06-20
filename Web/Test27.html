@@ -22,28 +22,27 @@
         Vue.component('component-a', {
             template: `<div>我是組件a</div>`,
             methods: {
-                showLog(){
+                show1(){
                     console.log("我是組件a");
                 }
             },
             created(){
-                this.$bus.$on("console-log", this.showLog)
+                this.$bus.$on("console-log", this.show1)
             }
         })
 
         Vue.component('component-c', {
             template: `<div>我是組件c</div>`,
             methods: {
-                showLog2(){
+                show2(){
                     console.log("我是組件c");
                 }
             },
             created(){
-                this.$bus.$on("console-log", this.showLog2)
+                this.$bus.$on("console-log", this.show2)
             },
             beforeDestroy() {  //組件銷毀前，移除該監聽
-                this.$bus.$off('console-log', this.showLog2); //取消掛載在console-log事件中的showLog2方法的監聽，所以組件c就不會有監聽了
-                //this.$bus.$off('console-log', this.showLog);  //取消掛載在console-log事件中的showLog方法的監聽，所以組件a就不會有監聽了
+                this.$bus.$off('console-log', this.show2); //取消掛載在console-log事件中的show2方法的監聽，所以組件c就不會有監聽了
             } 
         })
 

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <title>warnHandler(全局錯誤捕獲)</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="handleClick">父組件觸發</button>
+
+        <hr>
+
+        <component-a></component-a>
+    </div>
+
+    <hr>
+
+    <div id="app2">
+        <button @click="handleClick">第二父組件觸發</button>
+
+        <hr>
+
+        <component-a></component-a>
+    </div>
+
+    <script>
+        let componentB = {
+            template: `<div>
+                    <button @click="handleClick">第二層子組件觸發</button>
+                </div>`,
+            methods: {
+                handleClick() {
+                    throw new Error('拋出錯誤');
+                },
+            },
+            
+        };
+        
+        let componentA = {
+            template: `<div>
+                    <button @click="handleClick">第一層子組件觸發</button>
+                    <hr>
+                    <component-b></component-b>
+                </div>`,
+            methods: {
+                handleClick() {
+                    throw new Error('拋出錯誤');
+                },
+            },
+            components: {
+                'component-b': componentB
+            },
+        };
+
+        
+
+        let vm = new Vue({
+            el: '#app',
+            methods: {
+                handleClick() {
+                    throw new Error('拋出錯誤');
+                },
+            },
+            components: {
+                'component-a': componentA
+            },
+            created() {
+                Vue.config.errorHandler = function (error, vm, info) {
+                    console.log('觸發全局錯誤');
+                    console.log('error', error);
+                    console.log('vm', vm);
+                    console.log('info', info);
+                };
+            },
+        });
+
+        let vm2 = new Vue({
+            el: '#app2',
+            methods: {
+                handleClick() {
+                    throw new Error('拋出錯誤');
+                },
+            },
+            components: {
+                'component-a': componentA
+            },
+        })
+    </script>
+</body>
+
+</html>

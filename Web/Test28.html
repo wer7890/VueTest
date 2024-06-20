@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <script src="/js/Store.js"></script>
+    <title>store模式1</title>
+</head>
+
+<body>
+    <div id="app">
+        <component-a></component-a>
+        <component-b></component-b>
+    </div>
+
+    <script>
+        Vue.component('component-a', {
+            template: `<div class="A">
+                    我是A組件
+                    <ul>
+                        <li v-for="todo in store.todos"
+                        :key="todo.id"
+                        @click="setDone(todo.id)"
+                        :class="todo.done ? 'done' : ''">
+                        {{todo.text}}
+                        </li>
+                    </ul>
+                </div>`,
+            data() {
+                return {
+                    store: store.state
+                }
+            },
+            methods: {
+                setDone(id) {
+                    store.setDone(id);
+                }
+            }
+        });
+
+        Vue.component('component-b', {
+            template: `<div class="B">
+                    <div>
+                        我是 B 组件，在下方输入框输入任务在 A组件 中添加任务
+                    </div>
+                    <input type="text" v-model="text">
+                    <button @click="addTodo">add todo</button>
+                </div>`,
+            data() {
+                return {
+                    text: ''
+                }
+            },
+            methods: {
+                addTodo() {
+                    if (this.text) {
+                        store.addTodo(this.text)
+                    }
+                }
+            }
+        });
+
+        let vm = new Vue({
+            el: '#app',
+        })
+    </script>
+
+    <style>
+        .A {
+            background: red;
+            color: white;
+            padding: 20px;
+        }
+
+        .A li.done {
+            background: green;
+        }
+
+        .B {
+            background: yellow;
+            padding: 20px;
+        }
+    </style>
+</body>
+
+</html>

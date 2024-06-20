@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <script src="/js/Store.js"></script>
+    <title>store模式3</title>
+</head>
+
+<body>
+    <div id="app">
+        <component-a></component-a>
+        <hr>
+        <component-b></component-b>
+        <hr>
+        <component-c></component-c>
+    </div>
+
+
+    <script>
+        Vue.component('component-a', {
+            template: `<div>
+                    <p>組件A，負責顯示共享數據中的arr和count</p>
+                    <p>count: {{store.data.count}}</p>
+                    <ul>
+                        <li v-for='(data, index) in store.data.arr'
+                        :key="index">
+                        {{data}}
+                        </li>    
+                    </ul>
+                </div>`,
+            data() {
+                return {
+                    store: this.$store,
+                }
+            },
+        });
+
+
+
+        Vue.component('component-b', {
+            template: `<div>
+                    <p>組件B，負責新增和刪除共享數據中的arr</p>
+                    <input type="text" v-model="str">
+                    <button @click="add">添加</button>
+                    <button @click="pop">移除</button>
+                </div>`,
+            data() {
+                return {
+                    str: ''
+                }
+            },
+            methods: {
+                add() {
+                    if (this.str) {
+                        this.$store.addArr(this.str);
+                    }
+                },
+                pop() {
+                    this.$store.popArr();
+                }
+            },
+        });
+
+        Vue.component('component-c', {
+            template: `<div>
+                    <p>組件C，負責增加共享數據中的count</p>
+                    <button @click="add">count++</button>
+                </div>`,
+            methods: {
+                add() {
+                    this.$store.addCount();
+                },
+            },
+        });
+
+
+        let vm = new Vue({
+            el: "#app",
+            created(){
+                Vue.prototype.$store = store3;  //把store寫在全域中
+            }
+        })
+    </script>
+</body>
+
+</html>

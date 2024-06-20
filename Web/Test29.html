@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/vue.js"></script>
+    <script src="/js/Store.js"></script>
+    <title>store模式2</title>
+</head>
+<body>
+    <div id="app">
+        <component-a></component-a>
+
+        <hr>
+
+        <component-b></component-b>
+    </div>
+
+    <script>
+        Vue.component('component-a', {
+            template: `<div>
+                    <p>我是組件A</p>
+                    msg - {{state.msg}} <br>
+                    <button @click="updata">修改msg</button>
+                </div>`,
+            data() {
+                return {
+                    state: store2.state,
+                    newMsg: '修改後'
+                }
+            },
+            methods: {
+                updata(){
+                    this.state.msg = this.newMsg;
+                }
+            },
+        });
+
+
+        Vue.component('component-b', {
+            template: `<div>
+                    <p>我是組件B</p>
+                    msg - {{state.msg}} <br>
+                </div>`,
+            data() {
+                return {
+                    state: store2.state,
+                }
+            },
+        });
+
+        let vm = new Vue({
+            el: '#app'
+        })
+    </script>
+</body>
+</html>
